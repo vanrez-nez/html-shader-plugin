@@ -68,3 +68,17 @@ Will output an index.html like this:
 </body>
 </html>
 ```
+By default the name of the files is part of the id of the element. Is possible to override this by including a directive a the top the the shader file like so
+```glsl
+#pragma shader-loader custom-name
+
+#ifdef GL_ES
+  precision mediump float;
+#endif
+
+void main()
+{
+  ...
+}
+```
+with this the id will now be named `vertex-custom-name` or `fragment-custom-name` depending of the extension of the file.
