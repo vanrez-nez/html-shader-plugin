@@ -12,7 +12,7 @@ function findShaders(cb, pattern) {
       const type = info.ext === '.fs' ? 'fragment' : 'vertex';
       let name = info.name;
       // look up for pragma keyword to override name
-      const matchName = content.trim().match(/^#pragma\sshader-loader(.+\s)/);
+      const matchName = content.trim().match(/^#pragma\sshader-loader\s(.+)/);
       if (matchName !== null && typeof matchName[1] === 'string') {
         name = matchName[1].trim();
       }
