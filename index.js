@@ -2,6 +2,7 @@ const glob = require("glob")
 const fs = require('fs');
 const path = require('path');
 const glsl = require('glslify');
+const cheerio = require('cheerio');
 
 function findShaders(cb, pattern) {
   const shaders = [];
@@ -28,6 +29,15 @@ function findShaders(cb, pattern) {
   });
 }
 
+function getHtml(shaders) {
+  return shaders.reduce((acc, sh) => {
+    acc += `
+    <script type='x-shader/x-${sh.type}' id='${sh.type}-${sh.name}'>
+      ${sh.content}
+    </script>`;
+    return acc;
+  }, '');
+}
 
 class HtmlShaderPlugin {
   constructor(options) {
@@ -36,12 +46,14 @@ class HtmlShaderPlugin {
 
   apply(compiler) {
     compiler.hooks.compilation.tap('HtmlShaderPlugin', compilation => {
-      compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync('HtmlShaderPlugin', (data, cb) => {
+      compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync('HtmlShaderPlugin', (data, cb) => {
         findShaders( shaders => {
           shaders.forEach( shader => {
             compilation.fileDependencies.add(shader.file);
           });
-          data.plugin.options.shaders = shaders;
+          const $ = cheerio.load(data.html);
+          $('body').prepend(getHtml(shaders));
+          data.html = $.html();
           cb();
         }, `${this.path}/**/*.@(fs|vs)`);
       });
