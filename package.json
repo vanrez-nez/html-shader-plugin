@@ -1,10 +1,14 @@
 {
   "name": "html-shader-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webpack plugin to inject shader files into the project template",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radixzz/html-shader-plugin"
   },
   "keywords": [
     "webpack",
