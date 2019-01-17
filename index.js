@@ -1,6 +1,7 @@
 const glob = require("glob")
 const fs = require('fs');
 const path = require('path');
+const glsl = require('glslify');
 
 function findShaders(cb, pattern) {
   const shaders = [];
@@ -16,7 +17,12 @@ function findShaders(cb, pattern) {
       if (matchName !== null && typeof matchName[1] === 'string') {
         name = matchName[1].trim();
       }
-      shaders.push({ file: absPathFile, name, content, type });
+      shaders.push({
+        type,
+        name,
+        file: absPathFile,
+        content: glsl(content),
+      });
     });
     cb(shaders);
   });

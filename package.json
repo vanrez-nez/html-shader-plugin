@@ -17,5 +17,8 @@
     "glsl"
   ],
   "author": "Ivan Juarez Nuñez",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "glslify": "^7.0.0"
+  }
 }
