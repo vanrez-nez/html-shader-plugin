@@ -1,6 +1,6 @@
 {
   "name": "html-shader-plugin",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Webpack plugin to inject shader files into the project template",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "webpack",
     "plugin",
     "shader",
-    "glsl"
+    "glsl",
+    "glslify"
   ],
   "author": "Ivan Juarez Nuñez",
   "license": "MIT",
