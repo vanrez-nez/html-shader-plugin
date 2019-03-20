@@ -1,22 +1,17 @@
-# html-webpack-plugin
-
-
+# html-shader-plugin
 Webpack plugin to inject shader files into the project template.
 
 
 #### Requirements
 * html-webpack-plugin
 
-
 #### Installation
 ```shell
-
-npm install html-webpack-plugin --save-dev
-
-#or
-
-npm i html-webpack-plugin -D
-
+npm install html-webpack-plugin html-shader-plugin --save-dev
+```
+or
+```
+npm i html-webpack-plugin html-shader-plugin -D
 ```
 
 #### Usage:
@@ -48,7 +43,7 @@ Placing the following files for example:
 ./src/shaders/someshader/test.vs
 ```
 
-Will output an index.html like this:
+Will output an `index.html` like this:
 ```html
 <!doctype html>
 <html lang="en">
@@ -70,7 +65,7 @@ Will output an index.html like this:
 ```
 By default the name of the files is part of the id of the element. Is possible to override this by including a directive a the top the the shader file like so
 ```glsl
-#pragma shader-loader custom-name
+#pragma shader-loader custom-id
 
 #ifdef GL_ES
   precision mediump float;
@@ -81,4 +76,4 @@ void main()
   ...
 }
 ```
-with this the id will now be named `vertex-custom-name` or `fragment-custom-name` depending of the extension of the file.
+with this the id will now be named `custom-id`.
