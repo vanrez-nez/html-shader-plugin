@@ -32,7 +32,7 @@ function findShaders(cb, pattern) {
 function getHtml(shaders) {
   return shaders.reduce((acc, sh) => {
     acc += `
-    <script type='x-shader/x-${sh.type}' id='${sh.type}-${sh.name}'>
+    <script type='x-shader/x-${sh.type}' id='${sh.name}'>
       ${sh.content}
     </script>`;
     return acc;
