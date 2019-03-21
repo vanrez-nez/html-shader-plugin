@@ -1,5 +1,5 @@
 # html-shader-plugin
-Webpack plugin to inject shader files into the project template.
+Webpack plugin to inject shader files into the project template with [glslify](https://github.com/glslify/glslify) support.
 
 
 #### Requirements
@@ -63,7 +63,7 @@ Will output an `index.html` like this:
 </body>
 </html>
 ```
-By default the name of the files is part of the id of the element. Is possible to override this by including a directive a the top the the shader file like so
+By default the name of the files is part of the id of the element. Is possible to override this by including a directive a the top the the shader file. The following shader will output a tag with the attribute `id="custom-id"`
 ```glsl
 #pragma shader-loader custom-id
 
@@ -76,4 +76,15 @@ void main()
   ...
 }
 ```
-with this the id will now be named `custom-id`.
+
+You can make use of the glslify includes as usual:
+``` glsl
+#pragma shader-loader custom-id
+#pragma glslify: noise = require('glsl-noise/simplex/3d')
+
+precision mediump float;
+varying vec3 vpos;
+void main () {
+  gl_FragColor = vec4(noise(vpos*25.0),1);
+}
+```
