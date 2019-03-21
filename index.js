@@ -4,6 +4,28 @@ const path = require('path');
 const glsl = require('glslify');
 const cheerio = require('cheerio');
 
+const NEW_LINE_RE = /\r?\n/
+const PRAGMA_RE = /^#pragma\sshader-loader\s(.+)/
+
+function parseContent(content, defaultName) {
+  const lines = content.split(NEW_LINE_RE);
+  // extract pragma declaration for name
+  const pragmaName = lines.find(line => PRAGMA_RE.test(line));
+  // remove pragma declaration for name
+  const cleanLines = lines.filter(line => !PRAGMA_RE.test(line));
+  let name = defaultName;
+  // replace name if declaration found
+  if (pragmaName) {
+    let match = pragmaName.match(PRAGMA_RE);
+    name = (match[1] || '').trim();
+  }
+  return {
+    name,
+    // preprocess glslfy declarations
+    content: glsl(cleanLines.join('\n')),
+  };
+}
+
 function findShaders(cb, pattern) {
   const shaders = [];
   glob(pattern, (err, files) => {
@@ -11,18 +33,13 @@ function findShaders(cb, pattern) {
       const content = fs.readFileSync(file, 'utf8');
       const info = path.parse(file);
       const absPathFile = path.resolve(file);
-      const type = info.ext === '.fs' ? 'fragment' : 'vertex';
-      let name = info.name;
-      // look up for pragma keyword to override name
-      const matchName = content.trim().match(/^#pragma\sshader-loader\s(.+)/);
-      if (matchName !== null && typeof matchName[1] === 'string') {
-        name = matchName[1].trim();
-      }
+      const type = /frag$|fs$/.test(info.ext) ? 'fragment' : 'vertex';
+      let parsedContent = parseContent(content, info.name);
       shaders.push({
         type,
-        name,
         file: absPathFile,
-        content: glsl(content),
+        name: parsedContent.name,
+        content: parsedContent.content,
       });
     });
     cb(shaders);
@@ -55,7 +72,7 @@ class HtmlShaderPlugin {
           $('body').prepend(getHtml(shaders));
           data.html = $.html();
           cb();
-        }, `${this.path}/**/*.@(fs|vs)`);
+        }, `${this.path}/**/*.@(fs|vs|frag|vert)`);
       });
     });
   }
